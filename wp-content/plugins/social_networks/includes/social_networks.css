@@ -1,0 +1,7 @@
+
+/* Icon in topbar */
+
+#wpadminbar #wp-admin-bar-social_networks>.ab-item:before {
+    content: "\f237";
+    top: 2px;
+}
