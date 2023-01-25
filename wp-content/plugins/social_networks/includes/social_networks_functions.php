@@ -1,10 +1,13 @@
 <?php
 
+// FICHIER BACK
+
 /* START - ADMIN CSS */
 
 function my_admin_theme_style()
 {
     wp_enqueue_style('my-admin-theme', plugins_url('social_networks.css', __FILE__));
+    wp_enqueue_style( 'bootstrap-css',plugins_url( '/bootstrap/css/bootstrap.min.css', __FILE__ ) );
 }
 
 add_action('admin_enqueue_scripts', 'my_admin_theme_style');
@@ -112,7 +115,7 @@ add_action("admin_init", "social_media_section_settings");
 function social_media_page()
 { ?>
     <div class="container">
-        <h1>Réseaux sociaux</h1>
+        <h1>Social networks</h1>
 
         <form method="post" action="options.php">
             <?php
@@ -125,3 +128,70 @@ function social_media_page()
 <?php }
 
 /*  END - CREATING ADMIN PAGE : HTML HTML  */
+
+
+// Fichier FRONT
+
+
+/*  START - CREATING FRONT PAGE :  HTML  */
+
+
+function social_media_icons_front($social_media_icons)
+{
+    // Création et récupérations des variables
+    global $post;
+
+    $link = get_permalink($post->ID);
+    $link = esc_url($link);
+
+    // Création de la structure HTML
+    $html = "<div class='container row'><div class='h3'>Share on : </div>";
+
+    if (get_option("social-media-facebook") == 'activate')
+    {
+        $html = $html . "
+        <div class='col-1'>
+            <a target='_blank' href='https://www.facebook.com/sharer.php?" . $link . "'>
+                <i class='fab fa-facebook-square fa-2x'></i>
+            </a>
+        </div>";
+    }
+
+    if (get_option("social-media-twitter") == 'activate')
+    {
+        $html = $html . "
+        <div class='col-1'>
+            <a target='_blank' href='https://twitter.com/share?url=" . $link . "'>
+                <i class='fab fa-twitter-square fa-2x'></i>
+            </a>
+        </div>";
+    }
+
+    if (get_option("social-media-linkedin") == 'activate')
+    {
+        $html = $html . "
+        <div class='col-1'>
+            <a target='_blank' href='http://www.linkedin.com/shareArticle?url=" . $link . "'>
+                <i class='fab fa-linkedin fa-2x'></i>
+            </a>
+        </div>";
+    }
+
+    if (get_option("social-media-whatsapp") == 'activate')
+    {
+        $html = $html . "
+        <div class='col-1'>
+            <a target='_blank' href='tel:123-456-7890'>
+                <i class='fab fa-whatsapp-square fa-2x'></i>
+            </a>
+        </div>";
+    }
+
+    $social_media_icons = $social_media_icons . $html;
+    return $social_media_icons;
+}
+
+add_filter("the_content", "social_media_icons_front");
+
+
+/*  END - CREATING FRONT PAGE :  HTML  */
